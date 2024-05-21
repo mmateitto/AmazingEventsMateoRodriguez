@@ -195,7 +195,7 @@ const data = {
     ],
 };
 
-let padreTarjetas = document.querySelector(".padreTarjeta");
+let padreTarjetas = document.getElementById("divPadre");
 
 pintarTarjeta(padreTarjetas, data.events);
 
@@ -208,16 +208,17 @@ function pintarTarjeta(divPadre, array) {
 
 function crearTarjeta(divPadre, tarjeta) {
     let nuevaTarjeta = document.createElement("div");
+    nuevaTarjeta.className = "col-2 card m-2 d-flex flex-column justify-content-between";
     nuevaTarjeta.innerHTML =
-        `<div class="col card m-2 my-3 p-2">
-                <img style="height: 20vh;" src="${tarjeta.image}" class="object-fit-cover card-img-top img-fluid p-1"
-                <div class="card-body">
-                    <h5 class="card-title">${tarjeta.name}</h5>
-                    <p class="card-text">${tarjeta.description}</p>
-                    <h6>Capacity: ${tarjeta.capacity}</h6>
-                    <h6>Price: ${tarjeta.price}$</h6>
-                    <a href="./details.html" class="btn btn-primary" onClick="eliminarTarjeta('${tarjeta._id}')">See Details</a>
-                </div>
-            </div>`;
+        `<div class="card-header">
+                <img style="height: 20vh;" src="${tarjeta.image}" class="object-fit-cover card-img-top img-fluid p-1"> 
+        </div>   
+        <div class="card-body d-flex flex-column justify-content-between">
+                <h5 class="card-title">${tarjeta.name}</h5>
+                <p>${tarjeta.description}</p> 
+                <h6>Capacity: ${tarjeta.capacity}</h6>
+                <h6>Price: ${tarjeta.price}$</h6>
+                <a href="./details.html" class="btn btn-primary" onClick="eliminarTarjeta('${tarjeta._id}')">See Details</a>
+        </div>`;
     divPadre.appendChild(nuevaTarjeta);
 }
