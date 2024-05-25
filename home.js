@@ -1,4 +1,4 @@
-const data = {
+let data = {
     currentDate: "2023-01-01",
     events: [
         {
@@ -195,9 +195,7 @@ const data = {
     ],
 };
 
-let padreTarjetas = document.getElementById("divPadre");
-
-pintarTarjeta(padreTarjetas, data.events);
+let divPadre = document.getElementById("divPadre");
 
 function pintarTarjeta(divPadre, array) {
     divPadre.innerHTML = ""
@@ -208,17 +206,72 @@ function pintarTarjeta(divPadre, array) {
 
 function crearTarjeta(divPadre, tarjeta) {
     let nuevaTarjeta = document.createElement("div");
-    nuevaTarjeta.className = "col-2 card m-2 d-flex flex-column justify-content-between";
+    nuevaTarjeta.className = "col-auto card m-3 d-flex flex-column justify-content-between";
     nuevaTarjeta.innerHTML =
-        `<div class="card-header">
-                <img style="height: 20vh;" src="${tarjeta.image}" class="object-fit-cover card-img-top img-fluid p-1"> 
+        `<div class="card-header p-0 my-2">
+                <img style="height: 20vh;" src="${tarjeta.image}" class="object-fit-cover card-img-top img-fluid"> 
         </div>   
         <div class="card-body d-flex flex-column justify-content-between">
                 <h5 class="card-title">${tarjeta.name}</h5>
                 <p>${tarjeta.description}</p> 
                 <h6>Capacity: ${tarjeta.capacity}</h6>
                 <h6>Price: ${tarjeta.price}$</h6>
-                <a href="./details.html" class="btn btn-primary" onClick="eliminarTarjeta('${tarjeta._id}')">See Details</a>
+                <a href="./details.html?value=${tarjeta._id}" class="btn btn-primary">See Details</a>
         </div>`;
     divPadre.appendChild(nuevaTarjeta);
 }
+
+pintarTarjeta(divPadre, data.events);
+
+function crearCheckbox(divPadre, caja) {
+    for (let i = 0; i < caja.length; i++) {
+        let box = document.createElement("div");
+        box.className = "form-check form-check-inline";
+        box.innerHTML =
+            `<input class="form-check-input" type="checkbox" value='${caja[i]}'>
+    <label class="form-check-label">${caja[i]}</label>`;
+        divPadre.appendChild(box);
+    }
+}
+
+let eventos = data.events
+let categorias = []
+
+eventos.forEach(e => {
+    if (!categorias.includes(e.category)) {
+        categorias.push(e.category)
+    }
+})
+
+let padreCheckbox = document.getElementById("divCheckBox");
+
+padreCheckbox.addEventListener('change', (event) => {
+    let array = document.querySelectorAll('input[type=checkbox]:checked')
+    let filtradosBox = eventos.filter(objeto => {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].value == objeto.category) {
+                return objeto
+            }
+        }
+    })
+    if (filtradosBox.length === 0) {
+        pintarTarjeta(divPadre, data.events);
+    } else {
+        pintarTarjeta(divPadre, filtradosBox);
+    }
+});
+
+let buscar = document.getElementById("busqueda");
+
+buscar.addEventListener('input', (event) => {
+    let filtradosSearch = eventos.filter(e =>
+        e.name.toLowerCase().includes(event.target.value.toLowerCase()))
+    if (filtradosSearch.target == "") {
+        pintarTarjeta(divPadre, data.events);
+    } else {
+        pintarTarjeta(divPadre, filtradosSearch);
+    }
+})
+
+
+crearCheckbox(padreCheckbox, categorias);

@@ -1,4 +1,4 @@
-const data = {
+let data = {
     currentDate: "2023-01-01",
     events: [
         {
@@ -195,82 +195,44 @@ const data = {
     ],
 };
 
-let arrayFuturo = data.events.filter(element => data.currentDate < element.date);
+let padreDetails = document.getElementById("padreDetails");
 
-let padreTarjetas = document.getElementById("divPadre");
-
-function pintarTarjeta(divPadre, array) {
-    divPadre.innerHTML = ""
-    for (let i = 0; i < array.length; i++) {
-        crearTarjeta(divPadre, array[i]);
-    }
-}
-function crearTarjeta(divPadre, tarjeta) {
-    let nuevaTarjeta = document.createElement("div");
-    nuevaTarjeta.className = "col-auto card m-3 d-flex flex-column justify-content-between";
-    nuevaTarjeta.innerHTML =
-        `<div class="card-header p-0 my-2">
-                <img style="height: 20vh;" src="${tarjeta.image}" class="object-fit-cover card-img-top img-fluid"> 
-        </div>   
-        <div class="card-body d-flex flex-column justify-content-between">
+function pintarDetails (tarjeta){
+    let detalles = document.createElement("div");
+    detalles.className ='card m-5" style="max-width: 1200px;';
+    detalles.innerHTML = `
+    <div class="row g-0">
+        <div class="col-lg-5 p-3">
+            <img src="${tarjeta.image}"
+            class="img-fluid rounded-start m_2" alt="">
+        </div>
+        <div class="col-lg-5">
+            <div class="card-body">
                 <h5 class="card-title">${tarjeta.name}</h5>
-                <p>${tarjeta.description}</p> 
-                <h6>Capacity: ${tarjeta.capacity}</h6>
-                <h6>Price: ${tarjeta.price}$</h6>
-                <a href="./details.html?value=${tarjeta._id}" class="btn btn-primary">See Details</a>
-        </div>`;
-    divPadre.appendChild(nuevaTarjeta);
+                <p class="card-text">${tarjeta.description}</p>
+                <p class="card-text">Date: ${tarjeta.date}.</p>
+                <p class="card-text">Category: ${tarjeta.category}.</p>
+                <p class="card-text">Place: ${tarjeta.place}.</p>
+                <p class="card-text">Capacity: ${tarjeta.capacity}.</p>
+                <p class="card-text" id="faltante"></p>
+                <h5 class="card-title">Price: ${tarjeta.price}$</h5>
+            </div>
+        </div>
+    </div>`
+    padreDetails.appendChild(detalles);
 }
 
-pintarTarjeta(padreTarjetas, arrayFuturo);
+let urlDetails = new URL(window.location.href).searchParams.get('value');
 
-function crearCheckbox(divPadre, caja) {
-    for (let i = 0; i < caja.length; i++) {
-        let box = document.createElement("div");
-        box.className = "form-check form-check-inline";
-        box.innerHTML =
-            `<input class="form-check-input" type="checkbox" value='${caja[i]}'>
-    <label class="form-check-label">${caja[i]}</label>`;
-        divPadre.appendChild(box);
-    }
+let filtrados = data.events.filter(element => element._id == urlDetails)
+
+pintarDetails(filtrados[0]);
+
+let faltante = document.getElementById("faltante");
+
+
+if (filtrados[0].assistance >= 0){
+    faltante.innerHTML = `Assistance: ${filtrados[0].assistance}.`;
+} else {
+    faltante.innerHTML = `Estimate: ${filtrados[0].estimate}.`;
 }
-
-let categorias = []
-
-arrayFuturo.forEach(e => {
-    if (!categorias.includes(e.category)) {
-        categorias.push(e.category)
-    }
-})
-
-let padreCheckbox = document.getElementById("divCheckBox");
-
-padreCheckbox.addEventListener('change', (event) => {
-    let array = document.querySelectorAll('input[type=checkbox]:checked')
-    let filtradosBox = arrayFuturo.filter(objeto => {
-        for (let i = 0; i < array.length; i++) {
-            if (array[i].value == objeto.category) {
-                return objeto
-            }
-        }
-    })
-    if (filtradosBox.length === 0) {
-        pintarTarjeta(divPadre, arrayFuturo);
-    } else {
-        pintarTarjeta(divPadre, filtradosBox);
-    }
-});
-
-let buscar = document.getElementById("busqueda");
-
-buscar.addEventListener('input', (event) => {
-    let filtradosSearch = arrayFuturo.filter(e =>
-        e.name.toLowerCase().includes(event.target.value.toLowerCase()))
-    if (filtradosSearch.target == "") {
-        pintarTarjeta(divPadre, arrayFuturo);
-    } else {
-        pintarTarjeta(divPadre, filtradosSearch);
-    }
-})
-
-crearCheckbox(padreCheckbox, categorias);
