@@ -9,7 +9,7 @@ export function pintarTarjeta(divPadre, array) {
 
 export function crearTarjeta(divPadre, tarjeta) {
     let nuevaTarjeta = document.createElement("div");
-    nuevaTarjeta.className = "col-auto card m-3 d-flex flex-column justify-content-between";
+    nuevaTarjeta.className = "col-12-xs card m-3 d-flex flex-column";
     nuevaTarjeta.innerHTML =
         `<div class="card-header p-0 my-2">
                 <img style="height: 20vh;" src="${tarjeta.image}" class="object-fit-cover card-img-top img-fluid"> 
@@ -106,10 +106,6 @@ export function filtrarCheck(array, events) {
 export function filtrarText(texto, array) {
     let filtradosSearch = array.filter(e => e.name.toLowerCase().includes(texto.toLowerCase()));
     return filtradosSearch;
-}
-
-export function saludo(nombre) {
-    console.log("hola " + nombre);
 }
 
 export function page(functionModule, eventos) {
